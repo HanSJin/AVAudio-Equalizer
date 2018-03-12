@@ -16,22 +16,22 @@ Here are sample preset options.
 
 ```swift
 var preSet: [[Float]] = [
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // MySetting
-    [4, 6, 5, 0, 1, 3, 5, 4.5, 3.5, 0], // Dance
-    [4, 3, 2, 2.5, -1.5, -1.5, 0, 1, 2, 3], // Jazz
-    [5, 4, 3.5, 3, 1, 0, 0, 0, 0, 0] // BaseMain
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // MySetting
+[4, 6, 5, 0, 1, 3, 5, 4.5, 3.5, 0], // Dance
+[4, 3, 2, 2.5, -1.5, -1.5, 0, 1, 2, 3], // Jazz
+[5, 4, 3.5, 3, 1, 0, 0, 0, 0, 0] // BaseMain
 ]
 ```
 
-Also you can change the detail values of equalizer.
+Also you can change detail value.
 
 ```swift
 EQNode.bands[index].gain = 0.5 // set +0.5dB
 ```
 
-## Source of music
+## Music
 
-This project contains bensound-energy.mp3 as a sound sample. You can check the source of this music [here](https://www.bensound.com/royalty-free-music/track/energy).
+This project contains bensound-energy.mp3 as sound sample. You can check the source of this music [here](https://www.bensound.com/royalty-free-music/track/energy).
 
 ## License
 
