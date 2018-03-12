@@ -12,7 +12,7 @@ This repository is an iOS sample project that contrains how to use equalizer opt
 
 ## Source
 
-Here are sample frequency options.
+Here are sample preset options.
 
 ```swift
 var preSet: [[Float]] = [
@@ -23,13 +23,13 @@ var preSet: [[Float]] = [
 ]
 ```
 
-Also you can change the detail values.
+Also you can change the detail values of equalizer.
 
 ```swift
 EQNode.bands[index].gain = 0.5 // set +0.5dB
 ```
 
-## Music reference
+## Source of music
 
 This project contains bensound-energy.mp3 as a sound sample. You can check the source of this music [here](https://www.bensound.com/royalty-free-music/track/energy).
 
