@@ -28,10 +28,10 @@ Here are sample preset options. Also you can test the detail value of equalizer 
 ```Swift
 let frequencies: [Int] = [32, 63, 125, 250, 500, 1000, 2000, 4000, 8000, 16000]
 var preSets: [[Float]] = [
-[0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // My setting
-[4, 6, 5, 0, 1, 3, 5, 4.5, 3.5, 0], // Dance
-[4, 3, 2, 2.5, -1.5, -1.5, 0, 1, 2, 3], // Jazz
-[5, 4, 3.5, 3, 1, 0, 0, 0, 0, 0] // Base Main
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // My setting
+    [4, 6, 5, 0, 1, 3, 5, 4.5, 3.5, 0], // Dance
+    [4, 3, 2, 2.5, -1.5, -1.5, 0, 1, 2, 3], // Jazz
+    [5, 4, 3.5, 3, 1, 0, 0, 0, 0, 0] // Base Main
 ]
 ```
 
@@ -39,15 +39,15 @@ And can call the delegate.
 
 ```Swift
 func audioManager(didStart manager: AudioManager) {
-print("music play")
+    print("music play")
 }
 
 func audioManager(didStop manager: AudioManager) {
-print("music stop")
+    print("music stop")
 }
 
 func audioManager(didPause manager: AudioManager) {
-print("music pause")
+    print("music pause")
 }
 ```
 
