@@ -9,75 +9,73 @@
 import Foundation
 import AVFoundation
 
+protocol AudioManagerDelegate: class {
+    func audioManager(didStart manager: AudioManager)
+    func audioManager(didStop manager: AudioManager)
+    func audioManager(didPause manager: AudioManager)
+}
+
 class AudioManager {
+    weak var delegate: AudioManagerDelegate?
     
     // Variables
     fileprivate let player = AVAudioPlayerNode()
-    fileprivate let audioEngine: AVAudioEngine = AVAudioEngine()
+    fileprivate let audioEngine = AVAudioEngine()
     fileprivate var audioFileBuffer: AVAudioPCMBuffer?
-    fileprivate var EQNode: AVAudioUnitEQ = AVAudioUnitEQ(numberOfBands: 10)
+    fileprivate var EQNode: AVAudioUnitEQ?
     
-    fileprivate var selectedFreSetIndex = 0
-    fileprivate let frequencies = [32, 63, 125, 250, 500, 1000, 2000, 4000, 8000, 16000]
-    
-    // Setting values of Equalizer freset option
-    fileprivate var preSet: [[Float]] = [
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // My setting
-        [4, 6, 5, 0, 1, 3, 5, 4.5, 3.5, 0], // Dance
-        [4, 3, 2, 2.5, -1.5, -1.5, 0, 1, 2, 3], // Jazz
-        [5, 4, 3.5, 3, 1, 0, 0, 0, 0, 0] // Base Main
-    ]
-    
-    init() {
-        setUpEngine()
+    init?(music: String, frequencies: [Int]) {
+        setUpEngine(with: music, frequencies: frequencies)
     }
     
-    fileprivate func setUpEngine() {
+    fileprivate func setUpEngine(with name: String, frequencies: [Int]) {
+        // Load a music file
         do {
-            // Load a mp3 file
-            guard let musicUrl = Bundle.main.url(forResource: "bensound-energy", withExtension: "mp3") else { return }
+            guard let musicUrl = Bundle.main.url(forResource: name, withExtension: "mp3") else { return }
             let audioFile = try AVAudioFile(forReading: musicUrl)
             audioFileBuffer = AVAudioPCMBuffer(pcmFormat: audioFile.processingFormat, frameCapacity: UInt32(audioFile.length))
             try audioFile.read(into: audioFileBuffer!)
         } catch {
             assertionFailure("failed to load the music. Error: \(error)")
+            return
         }
         
-        // EQ initialize.
-        EQNode.globalGain = 1
-        for i in 0...(EQNode.bands.count-1) {
-            EQNode.bands[i].frequency  = Float(frequencies[i])
-            EQNode.bands[i].gain       = 0
-            EQNode.bands[i].bypass     = false
-            EQNode.bands[i].filterType = .parametric
+        // initial Equalizer.
+        EQNode = AVAudioUnitEQ(numberOfBands: frequencies.count)
+        EQNode!.globalGain = 1
+        for i in 0...(EQNode!.bands.count-1) {
+            EQNode!.bands[i].frequency  = Float(frequencies[i])
+            EQNode!.bands[i].gain       = 0
+            EQNode!.bands[i].bypass     = false
+            EQNode!.bands[i].filterType = .parametric
         }
         
-        // Attack nodes to an engine.
-        audioEngine.attach(EQNode)
+        // Attach nodes to an engine.
+        audioEngine.attach(EQNode!)
         audioEngine.attach(player)
         
         // Connect player to the EQNode.
         let mixer = audioEngine.mainMixerNode
-        audioEngine.connect(player, to: EQNode, format: mixer.outputFormat(forBus: 0))
+        audioEngine.connect(player, to: EQNode!, format: mixer.outputFormat(forBus: 0))
         
         // Connect the EQNode to the mixer.
-        audioEngine.connect(EQNode, to: mixer, format: mixer.outputFormat(forBus: 0))
+        audioEngine.connect(EQNode!, to: mixer, format: mixer.outputFormat(forBus: 0))
         
         // Schedule player to play the buffer on a loop.
         if let audioFileBuffer = audioFileBuffer {
             player.scheduleBuffer(audioFileBuffer, at: nil, options: .loops, completionHandler: nil)
         }
-        
-        // Start the audio engine
-        engineStart()
-        play()
     }
 }
 
 
 // MARK: State Update
 extension AudioManager {
-    func engineStart() {
+    public func isEngineRunning() -> Bool {
+        return audioEngine.isRunning
+    }
+    
+    public func engineStart() {
         audioEngine.prepare()
         do {
             try audioEngine.start()
@@ -86,48 +84,44 @@ extension AudioManager {
         }
     }
     
-    func play() {
+    public func play() {
         player.play()
+        delegate?.audioManager(didStart: self)
     }
     
-    func stop() {
+    public func stop() {
         player.stop()
+        delegate?.audioManager(didStop: self)
     }
     
-    func pause() {
+    public func pause() {
         player.pause()
-    }
-    
-    func isEngineRunning() -> Bool {
-        return audioEngine.isRunning
+        delegate?.audioManager(didStart: self)
     }
 }
 
 
-// MARK: Update Values
+// MARK: GET, SET
 extension AudioManager {
-    func getCurrentFreSet() -> [Float] {
-        return preSet[selectedFreSetIndex]
-    }
-    
-    func updateSelectedIndex(with index: Int) {
-        selectedFreSetIndex = index
-    }
-    
-    func updateBypass(to isOn: Bool) {
-        for i in 0...(EQNode.bands.count-1) {
-            EQNode.bands[i].bypass = isOn
+    public func setBypass(_ isOn: Bool) {
+        for i in 0...(EQNode!.bands.count-1) {
+            EQNode!.bands[i].bypass = isOn
         }
     }
     
-    func updateFreSetGain() {
+    public func setEquailizerOptions(gains: [Float]) {
+        guard let EQNode = EQNode else {
+            return
+        }
         for i in 0...(EQNode.bands.count-1) {
-            EQNode.bands[i].gain = preSet[selectedFreSetIndex][i]
+            EQNode.bands[i].gain = gains[i]
         }
     }
     
-    func updateEqualizer(with index: Int, value: Float) {
-        EQNode.bands[index].gain = value
-        preSet[selectedFreSetIndex][index] = value
+    public func getEquailizerOptions() -> [Float] {
+        guard let EQNode = EQNode else {
+            return []
+        }
+        return EQNode.bands.map { $0.gain }
     }
 }
