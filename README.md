@@ -7,8 +7,9 @@ This repository is an iOS sample project that contrains how to use equalizer opt
 
 ## Screenshots
 
-![New Screenshot 1](./screenshot1.png)
-![New Screenshot 2](./screenshot2.png)
+<img src='./screenshot1.png' alt='A screenshot of AVAudio+Equalizer' width='300'>
+<img src='./screenshot2.png' alt='A screenshot of AVAudio+Equalizer' width='300'>
+
 
 ## Code Examples
 
