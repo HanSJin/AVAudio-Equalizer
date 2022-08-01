@@ -3,16 +3,22 @@
 [![License](https://img.shields.io/cocoapods/l/Auk.svg?style=flat)](LICENSE)
 [![Platform](https://img.shields.io/cocoapods/p/Auk.svg?style=flat)](http://cocoadocs.org/docsets/Auk)
 
-This repository is an iOS sample project that contrains how to use equalizer options created by HanSJin.
+This repository is an iOS sample project that contrains how to use equalizer options created by **HanSJin**.
 
-## Screenshots
+## 📱 Screenshots
 
-<img src='./screenshot1.png' alt='A screenshot of AVAudio+Equalizer' width='300'>
-<img src='./screenshot2.png' alt='A screenshot of AVAudio+Equalizer' width='300'>
+|Normal|Enjoy Customizing|
+:-:|:-:
+|<img src='./screenshot1.png' alt='A screenshot of AVAudio+Equalizer' width='300'>|<img src='./screenshot2.png' alt='A screenshot of AVAudio+Equalizer' width='300'>|
 
 
-## Code Examples
+## ⚠️ Caution !! 
 
+```
+⚠️ After the build, the music will play automatically ⚠️
+```
+
+## 📎 Code Examples
 
 You can simply create an AudioEngine+Equalizer.
 
